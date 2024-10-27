@@ -127,19 +127,23 @@ function createBookCard(book) {
     const photo = book['photo'] || book['Photo'] || 'photos/logo/placeholder.jpg';
     const status = (book.status || '').toLowerCase();
     
+    // Properly escape the book data for JSON encoding
+    const escapedBookData = encodeURIComponent(JSON.stringify(book))
+        .replace(/'/g, '%27'); // Additional encoding for single quotes
+    
     return `
         <div class="col-md-4 mb-4">
             <div class="card h-100 shadow-sm hover:shadow-lg transition-all duration-300">
                 <div class="position-relative" style="padding-top: 100%;">
                     <img src="${photo}" 
                          class="card-img-top position-absolute top-0 start-0 w-100 h-100 p-3" 
-                         alt="${title}" 
+                         alt="${title.replace(/'/g, '&apos;')}" 
                          style="object-fit: contain;"
                          onerror="this.onerror=null; this.src='photos/logo/placeholder.jpg'">
                 </div>
                 <div class="card-body d-flex flex-column p-4">
-                    <h5 class="card-title fs-4 mb-2 text-truncate">${title}</h5>
-                    <p class="card-text text-muted mb-3">by ${author}</p>
+                    <h5 class="card-title fs-4 mb-2 text-truncate">${title.replace(/'/g, '&apos;')}</h5>
+                    <p class="card-text text-muted mb-3">by ${author.replace(/'/g, '&apos;')}</p>
                     <div class="mt-auto">
                         ${price ? `
                             <p class="card-text mb-3">
@@ -148,7 +152,7 @@ function createBookCard(book) {
                         ` : ''}
                         <a href="#" 
                            class="btn btn-outline-primary mt-auto w-100" 
-                           onclick="showBookDetails('${encodeURIComponent(JSON.stringify(book))}'); return false;">
+                           onclick="showBookDetails('${escapedBookData}'); return false;">
                             View Details
                             <i class="fas fa-info-circle ms-2"></i>
                         </a>
@@ -160,8 +164,8 @@ function createBookCard(book) {
 }
 
 function createBookDetailsModal(book) {
-    const title = book['book name'] || 'Unknown Title';
-    const author = book['author'] || 'Unknown Author';
+    const title = (book['book name'] || 'Unknown Title').replace(/'/g, '&apos;');
+    const author = (book['author'] || 'Unknown Author').replace(/'/g, '&apos;');
     const price = book['price'] ? `${book['price']} IQD` : null;
     const photo = book['photo'] || book['Photo'] || 'photos/logo/placeholder.jpg';
 
@@ -174,7 +178,7 @@ function createBookDetailsModal(book) {
         isbn10: book['ISBN 10'] || book['isbn10'],
         isbn13: book['ISBN 13'] || book['isbn13'],
         publishingDate: book['publishing_date'] || book['publishing date'],
-        description: book['description'],
+        description: book['description']?.replace(/'/g, '&apos;'),
         status: book['status']
     };
 
@@ -190,6 +194,10 @@ function createBookDetailsModal(book) {
         { label: 'ISBN 13', value: details.isbn13 },
         { label: 'Publishing Date', value: details.publishingDate }
     ];
+
+    // Properly escape the title for the email function
+    const escapedTitle = encodeURIComponent(book['book name'] || 'Unknown Title')
+        .replace(/'/g, '%27');
 
     return `
         <div class="modal fade" id="bookDetailsModal" tabindex="-1" aria-hidden="true">
@@ -235,7 +243,7 @@ function createBookDetailsModal(book) {
 
                                 ${details.status?.toLowerCase() === 'available' ? `
                                     <button class="btn btn-success w-100 mt-4" 
-                                            onclick="sendPurchaseEmail('${encodeURIComponent(title)}')">
+                                            onclick="sendPurchaseEmail('${escapedTitle}')">
                                         <i class="fas fa-shopping-cart me-2"></i>Buy Now
                                     </button>
                                 ` : '<button class="btn btn-secondary w-100 mt-4" disabled>Sold Out</button>'}
@@ -247,14 +255,15 @@ function createBookDetailsModal(book) {
         </div>
     `;
 }
-// Helper functions
+
+// Helper functions remain the same
 function renderDetailsColumn(details) {
     return details
         .filter(detail => detail.value)
         .map(detail => `
             <div class="mb-3">
                 <strong class="d-block text-dark mb-1">${detail.label}:</strong>
-                <span class="text-muted">${detail.value}</span>
+                <span class="text-muted">${String(detail.value).replace(/'/g, '&apos;')}</span>
             </div>
         `).join('');
 }
@@ -277,7 +286,6 @@ function renderStatusAndPrice(status, price) {
         </div>
     `;
 }
-
 // filter and search icon-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 function applyFilters() {
     const searchQuery = elements.searchInput.value.toLowerCase().trim();
