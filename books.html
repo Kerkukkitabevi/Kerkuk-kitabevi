@@ -45,44 +45,40 @@
     <!-- Books Section -->
     <section class="books-section py-5">
         <div class="container">
-<!-- Search and Filters -->
-<div class="row mb-4">
-    <!-- Search Box -->
-    <div class="col-md-8 mb-3">
-        <div class="search-box position-relative">
-            <input type="text" class="form-control" id="searchInput" placeholder="Search books by name or ISBN...">
-            <i class="fas fa-search position-absolute top-50 end-0 translate-middle-y me-3 text-muted"></i>
-        </div>
-    </div>
-    <!-- Filter Dropdown -->
-    <div class="col-md-4">
-        <div class="dropdown">
-            <button class="btn btn-light border w-100 dropdown-toggle show" type="button" data-bs-toggle="dropdown" aria-expanded="true">
-                <i class="fas fa-filter me-2"></i>Filter Options
-            </button>
-            <div class="dropdown-menu p-3 w-100 show" style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate3d(0px, 40px, 0px);" data-popper-placement="bottom-start">
-                <!-- Price Filter -->
-                <div class="price-filter mb-3">
-                    <label class="form-label">Price Range (IQD)</label>
-                    <div class="d-flex gap-2">
-                        <input type="number" id="priceRangeMin" class="form-control" placeholder="Min" min="250" max="50000" step="250" value="250">
-                        <input type="number" id="priceRangeMax" class="form-control" placeholder="Max" min="250" max="50000" step="250" value="50000">
+            <!-- Search and Filters -->
+            <div class="row mb-4">
+                <div class="col-md-8 mb-3">
+                    <div class="search-box position-relative">
+                        <input type="text" class="form-control" id="searchInput" placeholder="Search books by name or ISBN...">
+                        <i class="fas fa-search position-absolute top-50 end-0 translate-middle-y me-3 text-muted"></i>
                     </div>
                 </div>
-                <!-- Age Filter -->
-                <div class="age-filter mb-3">
-                    <label class="form-label">Age Range</label>
-                    <div class="d-flex gap-2">
-                        <input type="number" id="ageRangeMin" class="form-control" placeholder="Min" min="10" max="18" value="10">
-                        <input type="number" id="ageRangeMax" class="form-control" placeholder="Max" min="10" max="18" value="18">
+                <div class="col-md-4">
+                    <div class="dropdown">
+                        <button class="btn btn-light border w-100 dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-filter me-2"></i>Filter Options
+                        </button>
+                        <div class="dropdown-menu p-3 w-100">
+                            <div class="price-filter mb-3">
+                                <label class="form-label">Price Range (IQD)</label>
+                                <div class="d-flex gap-2">
+                                    <input type="number" id="priceRangeMin" class="form-control" placeholder="Min" min="250" max="50000" step="250" value="250">
+                                    <input type="number" id="priceRangeMax" class="form-control" placeholder="Max" min="250" max="50000" step="250" value="50000">
+                                </div>
+                            </div>
+                            <div class="age-filter mb-3">
+                                <label class="form-label">Age Range</label>
+                                <div class="d-flex gap-2">
+                                    <input type="number" id="ageRangeMin" class="form-control" placeholder="Min" min="10" max="18" value="10">
+                                    <input type="number" id="ageRangeMax" class="form-control" placeholder="Max" min="10" max="18" value="18">
+                                </div>
+                            </div>
+                            <button class="btn btn-primary w-100" id="applyFiltersBtn">Apply Filters</button>
+                        </div>
                     </div>
                 </div>
-                <!-- Apply Button -->
-                <button class="btn btn-primary w-100" id="applyFiltersBtn">Apply Filters</button>
             </div>
-        </div>
-    </div>
-</div>
+
             <!-- Results Count -->
             <div id="resultsCount" class="mb-3"></div>
 
