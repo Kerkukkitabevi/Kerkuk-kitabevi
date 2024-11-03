@@ -289,6 +289,7 @@ function renderStatusAndPrice(status, price) {
 // filter and search icon-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 function applyFilters() {
     const searchQuery = elements.searchInput.value.toLowerCase().trim();
+
     if (!searchQuery) {
         state.filteredBooks = [...state.allBooks]; // allBooks is already sorted by availability
     } else {
@@ -299,18 +300,20 @@ function applyFilters() {
                    (book['ISBN 13'] || book['isbn13'] || '').toString().toLowerCase().includes(searchQuery);
         });
     }
+
     state.currentPage = 1;
     displayBooks();
 }
+
 function showBookDetails(bookJSON) {
     try {
         const book = JSON.parse(decodeURIComponent(bookJSON));
-
+        
         const existingModal = document.getElementById('bookDetailsModal');
         if (existingModal) {
             existingModal.remove();
         }
-
+        
         document.body.insertAdjacentHTML('beforeend', createBookDetailsModal(book));
         const modal = new bootstrap.Modal(document.getElementById('bookDetailsModal'));
         modal.show();
@@ -318,11 +321,12 @@ function showBookDetails(bookJSON) {
         console.error('Error showing book details:', error);
     }
 }
+
 function sendPurchaseEmail(bookTitle) {
-    const subject = encodeURIComponent(Interest in purchasing: ${decodeURIComponent(bookTitle)});
-    const body = encodeURIComponent(I want to buy book: ${decodeURIComponent(bookTitle)});
-    window.location.href = mailto:contact@kerkukkitabevi.net?subject=${subject}&body=${body};
-} 
+    const subject = encodeURIComponent(`Interest in purchasing: ${decodeURIComponent(bookTitle)}`);
+    const body = encodeURIComponent(`I want to buy book: ${decodeURIComponent(bookTitle)}`);
+    window.location.href = `mailto:contact@kerkukkitabevi.net?subject=${subject}&body=${body}`;
+}
 //-------------------------------------------------------------------------------------------------------------------------------------------------------
 
 function updateResultsCount() {
