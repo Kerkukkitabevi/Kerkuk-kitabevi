@@ -289,42 +289,28 @@ function renderStatusAndPrice(status, price) {
 // filter and search icon-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 function applyFilters() {
     const searchQuery = elements.searchInput.value.toLowerCase().trim();
-    const minPrice = Number(document.getElementById('priceRangeMin').value);
-    const maxPrice = Number(document.getElementById('priceRangeMax').value);
-    const minAge = Number(document.getElementById('ageRangeMin').value);
-    const maxAge = Number(document.getElementById('ageRangeMax').value);
-
-    state.filteredBooks = state.allBooks.filter(book => {
-        const matchesSearch = !searchQuery || 
-            book['book name']?.toLowerCase().includes(searchQuery) ||
-            book['author']?.toLowerCase().includes(searchQuery) ||
-            (book['ISBN 10'] || book['isbn10'] || '').toString().toLowerCase().includes(searchQuery) ||
-            (book['ISBN 13'] || book['isbn13'] || '').toString().toLowerCase().includes(searchQuery);
-
-        const bookPrice = Number(book.price);
-        const matchesPrice = (!minPrice || bookPrice >= minPrice) && 
-                           (!maxPrice || bookPrice <= maxPrice);
-
-        const bookAge = Number(book.age);
-        const matchesAge = (!minAge || bookAge >= minAge) && 
-                         (!maxAge || bookAge <= maxAge);
-
-        return matchesSearch && matchesPrice && matchesAge;
-    });
-
+    if (!searchQuery) {
+        state.filteredBooks = [...state.allBooks]; // allBooks is already sorted by availability
+    } else {
+        state.filteredBooks = state.allBooks.filter(book => {
+            return book['book name']?.toLowerCase().includes(searchQuery) ||
+                   book['author']?.toLowerCase().includes(searchQuery) ||
+                   (book['ISBN 10'] || book['isbn10'] || '').toString().toLowerCase().includes(searchQuery) ||
+                   (book['ISBN 13'] || book['isbn13'] || '').toString().toLowerCase().includes(searchQuery);
+        });
+    }
     state.currentPage = 1;
     displayBooks();
 }
-
 function showBookDetails(bookJSON) {
     try {
         const book = JSON.parse(decodeURIComponent(bookJSON));
-        
+
         const existingModal = document.getElementById('bookDetailsModal');
         if (existingModal) {
             existingModal.remove();
         }
-        
+
         document.body.insertAdjacentHTML('beforeend', createBookDetailsModal(book));
         const modal = new bootstrap.Modal(document.getElementById('bookDetailsModal'));
         modal.show();
@@ -332,18 +318,11 @@ function showBookDetails(bookJSON) {
         console.error('Error showing book details:', error);
     }
 }
-
 function sendPurchaseEmail(bookTitle) {
-    const subject = encodeURIComponent(`Interest in purchasing: ${decodeURIComponent(bookTitle)}`);
-    const body = encodeURIComponent(`I want to buy book: ${decodeURIComponent(bookTitle)}`);
-    window.location.href = `mailto:contact@kerkukkitabevi.net?subject=${subject}&body=${body}`;
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('applyFiltersBtn').addEventListener('click', applyFilters);
-    document.getElementById('searchInput')?.addEventListener('input', applyFilters);
-});
-}
+    const subject = encodeURIComponent(Interest in purchasing: ${decodeURIComponent(bookTitle)});
+    const body = encodeURIComponent(I want to buy book: ${decodeURIComponent(bookTitle)});
+    window.location.href = mailto:contact@kerkukkitabevi.net?subject=${subject}&body=${body};
+} 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------
 
 function updateResultsCount() {
